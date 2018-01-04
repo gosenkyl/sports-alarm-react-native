@@ -1,10 +1,18 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 
 export default function(props){
     return (
-        <View>
-            <Text>Loading...</Text>
+        <View style={styles.container}>
+            <ActivityIndicator size="large" color="#0D4D4D" />
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
+});

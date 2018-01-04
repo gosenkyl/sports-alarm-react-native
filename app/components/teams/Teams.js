@@ -10,23 +10,21 @@ export default class Teams extends Component {
     constructor(props){
         super(props);
 
+        this.teamsService = new TeamsService();
+
         this.state = {
             isLoading: true,
-            isError: false,
             data: [],
             leagueId: props.leagueId
         };
     }
 
-    componentDidMount(){
+    async componentDidMount(){
         let leagueId = this.state.leagueId;
 
-        new TeamsService().getTeams(leagueId).then(teams => {
-            this.setState({data: teams, isLoading: false, isError: false});
-        }).catch(e => {
-            console.error(e);
-            this.setState({data: [], isLoading: false, isError: true})
-        });
+        let teams = this.teamsService.getTeamsList(leagueId);
+
+        this.setState({data: teams, isLoading: false});
     }
 
     render() {

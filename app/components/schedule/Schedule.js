@@ -1,63 +1,61 @@
 import React, { Component, PureComponent } from 'react';
-import { FlatList, View, Text, Image, StyleSheet, Dimensions } from 'react-native';
-import moment from 'moment';
+import { FlatList, View, Text, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import TeamsService from '../../services/TeamsService';
 import FavoritesService from '../../services/FavoritesService';
-import ImagesMap from '../../images';
+import ScheduleService from '../../services/ScheduleService';
 
-const alarmImgSrc = require("sports-alarm-react-native/app/assets/images/alarm_off.png");
+import ImagesMap from 'sports-alarm-react-native/app/images';
 
-export default class Leagues extends PureComponent {
+import Loading from '../loading/Loading';
+import ScheduleRow from './schedule-row/ScheduleRow';
+
+export default class Schedule extends PureComponent {
 
     constructor(props){
         super(props);
 
         this.favoritesService = new FavoritesService();
         this.teamsService = new TeamsService();
+        this.scheduleService = new ScheduleService();
 
         let team = props.team;
 
         this.state = {
             team: team,
             isFavorite: false,
-            schedule: []
+            schedule: null,
+            isError: false,
+            isLoading: true
         };
     }
 
     async componentDidMount(){
         let team = this.state.team;
-        let schedule = team.homeGames.concat(team.awayGames);
 
-        let allTeams = await this.teamsService.getTeams(team.leagueId);
+        try {
+            let schedule = await this.scheduleService.getSchedule(team);
 
-        let teamsMap = {};
+            let teamsMap = this.teamsService.getTeamsMap(team.leagueId);
 
-        allTeams.forEach(team => {
-            teamsMap[team.id] = team;
-        });
+            let modifiedSchedule = schedule.map(game => {
+                let homeTeam = game.homeTeamId === team.id ? team : teamsMap[game.homeTeamId];
+                let awayTeam = game.awayTeamId === team.id ? team : teamsMap[game.awayTeamId];
 
-        let sortedSchedule = schedule.sort((a, b) => {
-            let aGameTime = a.dateTime;
-            let bGameTime = b.dateTime;
+                game["homeTeam"] = homeTeam;
+                game["awayTeam"] = awayTeam;
 
-            return aGameTime > bGameTime ? 1 : aGameTime < bGameTime ? -1 : 0;
-        });
+                return game;
+            });
 
-        let modifiedSchedule = sortedSchedule.map(game => {
-            let homeTeam = game.homeTeamId === team.id ? team : teamsMap[game.homeTeamId];
-            let awayTeam = game.awayTeamId === team.id ? team : teamsMap[game.awayTeamId];
+            let isFavorite = await this.favoritesService.isFavorite(team.id);
 
-            game["homeTeam"] = homeTeam;
-            game["awayTeam"] = awayTeam;
-
-            return game;
-        });
-
-        let isFavorite = await this.favoritesService.isFavorite(team.id);
-
-        this.setState({isFavorite: isFavorite, schedule: modifiedSchedule});
+            this.setState({isLoading: false, isFavorite: isFavorite, schedule: modifiedSchedule});
+        } catch(e) {
+            console.error(e);
+            this.setState({isError: true, isLoading: false});
+        }
     }
 
     async _onFavorite(){
@@ -78,21 +76,53 @@ export default class Leagues extends PureComponent {
 
     render(){
         return (
-            <FlatList
-                data={this.state.schedule}
-                keyExtractor={item => item.id}
-                initialNumToRender={24}
-                renderItem={renderItem}
-                ListHeaderComponent={<Header team={this.state.team} isFavorite={this.state.isFavorite} onFavorite={this._onFavorite.bind(this)}/>}
-            />
+            this.state.isLoading
+                ? <Loading />
+                : <FlatList
+                    data={this.state.schedule}
+                    keyExtractor={item => item.id}
+                    initialNumToRender={24}
+                    renderItem={_renderItem}
+                    ListHeaderComponent={<Header team={this.state.team} isFavorite={this.state.isFavorite} onFavorite={this._onFavorite.bind(this)}/>}
+                />
         )
     }
 }
 
+const _renderItem = ({item}) => (
+    <ScheduleRow game={item} />
+);
+
+class Header extends PureComponent {
+    render() {
+        let team = this.props.team;
+        let imgSrc = ImagesMap[`${team.leagueId.toLowerCase()}_${team.image}`];
+        if (!imgSrc) {
+            console.error("No Img Src For: ", team.image);
+        }
+
+        let favoriteColor = this.props.isFavorite ? "#B30000" : "#000000";
+        let icon = this.props.isFavorite ? "heart" : "heart-o";
+
+        return <View style={{flexDirection: 'column'}}>
+            <View style={styles.headerTeam}>
+                <Image
+                    style={{width: 30, height: 30, margin: 8}}
+                    source={imgSrc}/>
+                <Text style={styles.headerText}>{team.city}</Text>
+                <Text style={[styles.headerText, {paddingLeft: 5}]}>{team.mascot}</Text>
+                <Icon name={icon} size={25} color={favoriteColor} onPress={() => {this.props.onFavorite()}}
+                      style={{paddingLeft: 10}}/>
+            </View>
+            <View style={styles.headerTitle}>
+                <Text style={{color: '#FFFFFF'}}>Home</Text>
+                <Text style={{color: '#FFFFFF'}}>Away</Text>
+            </View>
+        </View>
+    }
+}
+
 const styles = StyleSheet.create({
-    game: {
-        flexDirection: 'column'
-    },
     headerTeam: {
         flexDirection: 'row',
         justifyContent: 'center',
@@ -110,89 +140,3 @@ const styles = StyleSheet.create({
         paddingLeft: 10
     }
 });
-
-class Header extends PureComponent {
-    render(){
-        let team = this.props.team;
-        let imgSrc = ImagesMap[`${team.leagueId.toLowerCase()}_${team.image}`];
-        if(!imgSrc){
-            console.error("No Img Src For: ", team.image);
-        }
-
-        let favoriteColor = this.props.isFavorite ? "#B30000" : "#000000";
-        let icon = this.props.isFavorite ? "heart" : "heart-o";
-
-        return <View style={{flexDirection: 'column'}}>
-                <View style={styles.headerTeam}>
-                    <Image
-                        style={{width: 30, height: 30, margin: 8}}
-                        source={imgSrc} />
-                    <Text style={styles.headerText}>{team.city}</Text>
-                    <Text style={[styles.headerText, {paddingLeft: 5}]}>{team.mascot}</Text>
-                    <Icon name={icon} size={25} color={favoriteColor} onPress={() => {this.props.onFavorite();}} style={{paddingLeft: 10}}/>
-                </View>
-                <View style={styles.headerTitle}>
-                    <Text style={{color: '#FFFFFF'}}>Home</Text>
-                    <Text style={{color: '#FFFFFF'}}>Away</Text>
-                </View>
-            </View>
-    }
-}
-
-const renderItem = ({item}) => (
-    <Game game={item}/>
-);
-
-class Game extends PureComponent {
-    render(){
-        let game = this.props.game;
-
-        let homeTeam = game.homeTeam;
-        let awayTeam = game.awayTeam;
-
-        let gameTime = moment(game.dateTime);
-        let day = gameTime.format('ddd');
-        let date = gameTime.format('MM/DD/YY');
-        let time = gameTime.format('h:mma');
-
-        return <View key={game.id} style={styles.game}>
-            <View style={{flexDirection: 'row', width: "100%", alignItems: 'center', justifyContent: 'space-around', backgroundColor: '#0D4D4D'}}>
-                <Text style={{color: "#FFFFFF"}}>{day}</Text>
-                <Text style={{color: "#FFFFFF"}}>{date}</Text>
-                <Text style={{color: "#FFFFFF"}}>{time}</Text>
-            </View>
-
-            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around'}}>
-                    <Team team={homeTeam} />
-                    <Text style={{flex: 1}}> vs </Text>
-                    <Team team={awayTeam} />
-                </View>
-
-                <View style={{width: '15%'}}>
-                    <Image
-                        style={{width: 30, height: 30, margin: 8}}
-                        source={alarmImgSrc} />
-                </View>
-            </View>
-        </View>
-    }
-}
-
-const Team = (params) => {
-    let team = params.team;
-    let imgSrc = ImagesMap[`${team.leagueId.toLowerCase()}_${team.image}`];
-    if(!imgSrc){
-        console.error("No Img Src For: ", team.image);
-    }
-
-    return <View style={{flex: 5, flexDirection: 'row', alignItems: 'center'}}>
-        <Image
-            style={{width: 30, height: 30, margin: 8}}
-            source={imgSrc} />
-        <View style={styles.centered}>
-            <Text>{team.city}</Text>
-            <Text>{team.mascot}</Text>
-        </View>
-    </View>
-};

@@ -6,7 +6,7 @@ import Teams from '../teams/Teams';
 
 const initialLayout = {
     height: 0,
-    width: Dimensions.get('window').width,
+    width: Dimensions.get('window').width
 };
 
 const NFLRoute = () => <Teams leagueId="NFL"/>;

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, Text, Image, StyleSheet, TouchableHighlight } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 
 import ImagesMap from '../../images';
@@ -11,7 +11,7 @@ export default class Team extends PureComponent {
         if(!imgSrc){
             console.log("No Img Src For: ", team.image);
         }
-        return <TouchableHighlight key={team.id} style={styles.team} onPress={() => Actions.schedule({team: team})}>
+        return <TouchableOpacity key={team.id} style={styles.team} onPress={() => Actions.schedule({team: team})}>
             <View>
                 <Image
                     style={{width: 75, height: 75}}
@@ -19,7 +19,7 @@ export default class Team extends PureComponent {
                 <Text style={{textAlign: 'center'}}>{team.city}</Text>
                 <Text style={{textAlign: 'center'}}>{team.mascot}</Text>
             </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
     }
 }
 
