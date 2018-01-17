@@ -42,7 +42,7 @@ export default class {
     }
 
     async removeFavorite(teamId){
-        let result = await AsyncStorage.removeItem(`${storeName}:${teamId}`);
+        let result = await AsyncStorage.removeItem(`${storeName}${teamId}`);
         this.favoritesChanged = true;
         return result;
     }

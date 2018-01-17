@@ -7,7 +7,7 @@ import FavoritesService from 'sports-alarm-react-native/app/services/FavoritesSe
 import Loading from 'sports-alarm-react-native/app/components/loading/Loading';
 import Team from 'sports-alarm-react-native/app/components/team/Team';
 
-export default class FavoriteTeams extends Component {
+export default class FavoriteTeams extends PureComponent {
     constructor(props){
         super(props);
 

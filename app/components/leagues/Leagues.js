@@ -13,7 +13,7 @@ const NFLRoute = () => <Teams leagueId="NFL"/>;
 const MLBRoute = () => <Teams leagueId="MLB"/>;
 const CFBRoute = () => <View style={[ styles.container ]} />;
 const CBBRoute = () => <View style={[ styles.container ]} />;
-const NBARoute = () => <View style={[ styles.container ]} />;
+const NBARoute = () => <Teams leagueId="NBA"/>;
 const NHLRoute = () => <View style={[ styles.container ]} />;
 
 export default class Leagues extends PureComponent {

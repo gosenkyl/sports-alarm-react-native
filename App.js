@@ -45,14 +45,14 @@ export default class App extends Component {
             <Router>
                 <Stack key="root">
                     <Scene key="favorites"
-                           initial
-                           component={Favorites}
-                           title="Favorites"
-                           titleStyle={styles.title}
-                           navigationBarStyle={styles.navBar}
-                           renderLeftButton={MenuButton}
-                           renderRightButton={LeaguesButton}
-                           onEnter={_enterFavorites}
+                       initial
+                       component={Favorites}
+                       title="Favorites"
+                       titleStyle={styles.title}
+                       navigationBarStyle={styles.navBar}
+                       renderLeftButton={MenuButton}
+                       renderRightButton={LeaguesButton}
+                       onEnter={_enterFavorites}
                     />
                     <Scene
                         key="leagues"

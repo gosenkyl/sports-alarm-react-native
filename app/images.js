@@ -66,8 +66,41 @@ const mlb_stl = require("sports-alarm-react-native/app/assets/images/mlb_stl.png
 const mlb_tam = require("sports-alarm-react-native/app/assets/images/mlb_tb.png");
 const mlb_tex = require("sports-alarm-react-native/app/assets/images/mlb_tex.png");
 const mlb_tor = require("sports-alarm-react-native/app/assets/images/mlb_tor.png");
-const mlb_was = require("sports-alarm-react-native/app/assets/images/mlb_wsh.png")
+const mlb_was = require("sports-alarm-react-native/app/assets/images/mlb_wsh.png");
 
+/**
+ * NBA
+ */
+const nba_atl = require("sports-alarm-react-native/app/assets/images/nba_atl.png");
+const nba_bkn = require("sports-alarm-react-native/app/assets/images/nba_bkn.png");
+const nba_bos = require("sports-alarm-react-native/app/assets/images/nba_bos.png");
+const nba_cha = require("sports-alarm-react-native/app/assets/images/nba_cha.png");
+const nba_chi = require("sports-alarm-react-native/app/assets/images/nba_chi.png");
+const nba_cle = require("sports-alarm-react-native/app/assets/images/nba_cle.png");
+const nba_dal = require("sports-alarm-react-native/app/assets/images/nba_dal.png");
+const nba_den = require("sports-alarm-react-native/app/assets/images/nba_den.png");
+const nba_det = require("sports-alarm-react-native/app/assets/images/nba_det.png");
+const nba_gs = require("sports-alarm-react-native/app/assets/images/nba_gs.png");
+const nba_hou = require("sports-alarm-react-native/app/assets/images/nba_hou.png");
+const nba_ind = require("sports-alarm-react-native/app/assets/images/nba_ind.png");
+const nba_lac = require("sports-alarm-react-native/app/assets/images/nba_lac.png");
+const nba_lal = require("sports-alarm-react-native/app/assets/images/nba_lal.png");
+const nba_mem = require("sports-alarm-react-native/app/assets/images/nba_mem.png");
+const nba_mia = require("sports-alarm-react-native/app/assets/images/nba_mia.png");
+const nba_mil = require("sports-alarm-react-native/app/assets/images/nba_mil.png");
+const nba_min = require("sports-alarm-react-native/app/assets/images/nba_min.png");
+const nba_no = require("sports-alarm-react-native/app/assets/images/nba_no.png");
+const nba_ny = require("sports-alarm-react-native/app/assets/images/nba_ny.png");
+const nba_okc = require("sports-alarm-react-native/app/assets/images/nba_okc.png");
+const nba_orl = require("sports-alarm-react-native/app/assets/images/nba_orl.png");
+const nba_phi = require("sports-alarm-react-native/app/assets/images/nba_phi.png");
+const nba_phx = require("sports-alarm-react-native/app/assets/images/nba_phx.png");
+const nba_por = require("sports-alarm-react-native/app/assets/images/nba_por.png");
+const nba_sac = require("sports-alarm-react-native/app/assets/images/nba_sac.png");
+const nba_sas = require("sports-alarm-react-native/app/assets/images/nba_sas.png");
+const nba_tor = require("sports-alarm-react-native/app/assets/images/nba_tor.png");
+const nba_utah = require("sports-alarm-react-native/app/assets/images/nba_utah.png");
+const nba_was = require("sports-alarm-react-native/app/assets/images/nba_was.png");
 
 export default {
     /**
@@ -138,5 +171,36 @@ export default {
     "mlb_tam": mlb_tam,
     "mlb_tex": mlb_tex,
     "mlb_tor": mlb_tor,
-    "mlb_was": mlb_was
+    "mlb_was": mlb_was,
+
+    "nba_atl": nba_atl,
+    "nba_bkn": nba_bkn,
+    "nba_bos": nba_bos,
+    "nba_cha": nba_cha,
+    "nba_chi": nba_chi,
+    "nba_cle": nba_cle,
+    "nba_dal": nba_dal,
+    "nba_den": nba_den,
+    "nba_det": nba_det,
+    "nba_gs": nba_gs,
+    "nba_hou": nba_hou,
+    "nba_ind": nba_ind,
+    "nba_lac": nba_lac,
+    "nba_lal": nba_lal,
+    "nba_mem": nba_mem,
+    "nba_mia": nba_mia,
+    "nba_mil": nba_mil,
+    "nba_min": nba_min,
+    "nba_no": nba_no,
+    "nba_ny": nba_ny,
+    "nba_okc": nba_okc,
+    "nba_orl": nba_orl,
+    "nba_phi": nba_phi,
+    "nba_phx": nba_phx,
+    "nba_por": nba_por,
+    "nba_sac": nba_sac,
+    "nba_sas": nba_sas,
+    "nba_tor": nba_tor,
+    "nba_utah": nba_utah,
+    "nba_was": nba_was
 }

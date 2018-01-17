@@ -111,7 +111,10 @@ class Header extends PureComponent {
                     source={imgSrc}/>
                 <Text style={styles.headerText}>{team.city}</Text>
                 <Text style={[styles.headerText, {paddingLeft: 5}]}>{team.mascot}</Text>
-                <Icon name={icon} size={25} color={favoriteColor} onPress={() => {this.props.onFavorite()}}
+                <Icon name={icon}
+                      size={25}
+                      color={favoriteColor}
+                      onPress={() => {this.props.onFavorite()}}
                       style={{paddingLeft: 10}}/>
             </View>
             <View style={styles.headerTitle}>

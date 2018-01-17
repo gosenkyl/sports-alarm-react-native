@@ -16,6 +16,8 @@ export default class {
             instance.nflMap = {};
             instance.mlbTeams = null;
             instance.mlbMap = {};
+            instance.nbaTeams = null;
+            instance.nbaMap = {};
         }
 
         return instance;
@@ -29,8 +31,10 @@ export default class {
 
         let nflTeams = [];
         let mlbTeams = [];
+        let nbaTeams = [];
         let nflMap = {};
         let mlbMap = {};
+        let nbaMap = {};
 
         allTeams.forEach(team => {
             switch(team.leagueId){
@@ -42,6 +46,10 @@ export default class {
                     mlbTeams.push(team);
                     mlbMap[team.id] = team;
                     break;
+                case "NBA":
+                    nbaTeams.push(team);
+                    nbaMap[team.id] = team;
+                    break;
                 default:
                     break;
             }
@@ -52,6 +60,8 @@ export default class {
         this.nflMap = nflMap;
         this.mlbTeams = this.sortTeams(mlbTeams);
         this.mlbMap = mlbMap;
+        this.nbaTeams = this.sortTeams(nbaTeams);
+        this.nbaMap = nbaMap;
 
         this.allTeams = this.sortTeams(allTeams);
         this.allMap = allMap;
@@ -73,6 +83,8 @@ export default class {
                 return this.nflTeams;
             case "MLB":
                 return this.mlbTeams;
+            case "NBA":
+                return this.nbaTeams;
             default:
                 return [];
         }
@@ -84,6 +96,8 @@ export default class {
                 return this.nflMap;
             case "MLB":
                 return this.mlbMap;
+            case "NBA":
+                return this.nbaMap;
             default:
                 return [];
         }
@@ -94,64 +108,6 @@ export default class {
             return this.allMap[id];
         })
     }
-
-    /*getTeams(leagueId){
-        switch(leagueId) {
-            case "NFL":
-                return this.nflTeams === null ? this.getNFLTeams() : new Promise(resolve => { return resolve(this.nflTeams); });
-            case "MLB":
-                return this.mlbTeams === null ? this.getMLBTeams() : new Promise(resolve => { return resolve(this.mlbTeams); });
-            default:
-                return new Promise(resolve => { return resolve([]); })
-        }
-    }
-
-    async getTeamsByIds(teamIds){
-        try {
-            let teams = await axios.get(`${host}teams/ids?ids=${teamIds}`);
-            return teams.data;
-        } catch(e){
-            console.error(e);
-            throw e;
-        }
-    }
-
-    async getNFLTeams(){
-        let teams = null;
-        try {
-            teams = await this.loadTeams("NFL");
-        } catch(e) {
-            console.error(e);
-            throw e;
-        }
-        this.nflTeams = teams;
-        return teams;
-    }
-
-    async getMLBTeams(){
-        let teams = null;
-        try {
-            teams = await this.loadTeams("MLB");
-        } catch(e) {
-            console.error(e);
-            throw e;
-        }
-        this.mlbTeams = teams;
-        return teams;
-    }
-
-    async loadTeams(leagueId){
-        let teams = null;
-
-        try {
-            let response = await axios.get(`${host}teams?leagueId=${leagueId}`);
-            teams = this.sortTeams(response.data);
-        } catch(e) {
-            console.error(`Error Fetching ${leagueId} Data: `, error);
-        }
-
-        return teams;
-    }*/
 
     sortTeams(teams){
         return teams.sort((a, b) => {

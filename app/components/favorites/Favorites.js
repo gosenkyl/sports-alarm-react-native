@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component, PureComponent } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
 
@@ -10,10 +10,7 @@ const initialLayout = {
     width: Dimensions.get('window').width
 };
 
-const FavoriteTeamsRoute = () => <FavoriteTeams/>;
-const FavoriteScheduleRoute = () => <FavoriteSchedule/>;
-
-export default class Favorites extends PureComponent {
+export default class Favorites extends Component {
 
     state = {
         index: 0,
@@ -23,14 +20,21 @@ export default class Favorites extends PureComponent {
         ]
     };
 
+    _renderScene = (route) => {
+        const scenes = {
+            'favorite_teams': <FavoriteTeams />,
+            'favorite_schedule': <FavoriteSchedule />
+        };
+        return scenes[route.route.key];
+    };
+
     _handleIndexChange = index => this.setState({ index });
 
     _renderHeader = props => <TabBar {...props} style={styles.tabBar} labelStyle={styles.labelStyle} indicatorStyle={styles.indicatorStyle}/>;
 
-    _renderScene = SceneMap({
-        favorite_teams: FavoriteTeamsRoute,
-        favorite_schedule: FavoriteScheduleRoute
-    });
+    componentWillReceiveProps(/*newProps*/){
+        this.setState({time: new Date()});
+    }
 
     render() {
         return (
