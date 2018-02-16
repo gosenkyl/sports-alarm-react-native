@@ -2,15 +2,9 @@ import React, { PureComponent } from 'react';
 import moment from 'moment';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
-import NotificationService from 'sports-alarm-react-native/app/services/NotificationService';
+import Alarm from 'sports-alarm-react-native/app/components/alarm/Alarm';
 
 import ImagesMap from 'sports-alarm-react-native/app/images';
-
-const alarmImgSrc = require("sports-alarm-react-native/app/assets/images/alarm_off.png");
-
-const _onAlarm = (game) => {
-    new NotificationService().createNotification(game);
-};
 
 export default class ScheduleRow extends PureComponent {
     render() {
@@ -39,11 +33,7 @@ export default class ScheduleRow extends PureComponent {
                     <Team team={awayTeam}/>
                 </View>
 
-                <TouchableOpacity style={{width: '15%'}} onPress={() => _onAlarm(game)}>
-                    <Image
-                        style={{width: 30, height: 30, margin: 8}}
-                        source={alarmImgSrc}/>
-                </TouchableOpacity>
+                <Alarm style={{width: '15%'}} game={game} />
             </View>
         </View>
     }
