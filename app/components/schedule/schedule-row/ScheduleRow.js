@@ -9,6 +9,8 @@ import ImagesMap from 'sports-alarm-react-native/app/images';
 export default class ScheduleRow extends PureComponent {
     render() {
         let game = this.props.game;
+        let onShowAlarmDialog = this.props.onShowAlarmDialog;
+        let shouldShowAlarm = this.props.showAlarm !== undefined ? this.props.showAlarm : true;
 
         let homeTeam = game.homeTeam;
         let awayTeam = game.awayTeam;
@@ -33,7 +35,7 @@ export default class ScheduleRow extends PureComponent {
                     <Team team={awayTeam}/>
                 </View>
 
-                <Alarm style={{width: '15%'}} game={game} />
+                {shouldShowAlarm && <Alarm style={{width: '15%'}} game={game} onShowAlarmDialog={onShowAlarmDialog}/>}
             </View>
         </View>
     }

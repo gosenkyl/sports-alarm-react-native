@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from 'react';
-import { FlatList, View, Text, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { FlatList, View, Text, Image, StyleSheet, Dimensions, TouchableOpacity, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import TeamsService from '../../services/TeamsService';
@@ -8,8 +8,10 @@ import ScheduleService from '../../services/ScheduleService';
 
 import ImagesMap from 'sports-alarm-react-native/app/images';
 
+import Header from './header/Header';
 import Loading from '../loading/Loading';
 import ScheduleRow from './schedule-row/ScheduleRow';
+import AlarmDialog from '../alarm-dialog/AlarmDialog';
 
 export default class Schedule extends PureComponent {
 
@@ -27,8 +29,12 @@ export default class Schedule extends PureComponent {
             isFavorite: false,
             schedule: null,
             isError: false,
-            isLoading: true
+            isLoading: true,
+            popupDialog: null,
+            alarmGame: null
         };
+
+        //this._onShowAlarmDialog = this._onShowAlarmDialog.bind(this);
     }
 
     async componentDidMount(){
@@ -74,72 +80,40 @@ export default class Schedule extends PureComponent {
         }
     }
 
+    _renderItem = ({item}) => (
+        <ScheduleRow game={item} onShowAlarmDialog={this._onShowAlarmDialog}/>
+    );
+
+    _onShowAlarmDialog = (game) => {
+        this.setState({
+           alarmGame: game
+        });
+
+        this.state.popupDialog.show();
+    };
+
+    setPopupDialog = (popupDialog) => {
+        this.setState({
+           popupDialog: popupDialog
+        });
+    };
+
     render(){
         return (
-            this.state.isLoading
-                ? <Loading />
-                : <FlatList
-                    data={this.state.schedule}
-                    keyExtractor={item => item.id}
-                    initialNumToRender={24}
-                    renderItem={_renderItem}
-                    ListHeaderComponent={<Header team={this.state.team} isFavorite={this.state.isFavorite} onFavorite={this._onFavorite.bind(this)}/>}
-                />
+            <View>
+                {
+                    this.state.isLoading
+                        ? <Loading />
+                        : <FlatList
+                            data={this.state.schedule}
+                            keyExtractor={item => item.id}
+                            initialNumToRender={24}
+                            renderItem={this._renderItem}
+                            ListHeaderComponent={<Header team={this.state.team} isFavorite={this.state.isFavorite} onFavorite={this._onFavorite.bind(this)}/>}
+                            />
+                }
+                <AlarmDialog alarmGame={this.state.alarmGame} setPopupDialog={this.setPopupDialog}/>
+            </View>
         )
     }
 }
-
-const _renderItem = ({item}) => (
-    <ScheduleRow game={item} />
-);
-
-class Header extends PureComponent {
-    render() {
-        let team = this.props.team;
-        let imgSrc = ImagesMap[`${team.leagueId.toLowerCase()}_${team.image}`];
-        if (!imgSrc) {
-            console.error("No Img Src For: ", team.image);
-        }
-
-        let favoriteColor = this.props.isFavorite ? "#B30000" : "#000000";
-        let icon = this.props.isFavorite ? "heart" : "heart-o";
-
-        return <View style={{flexDirection: 'column'}}>
-            <View style={styles.headerTeam}>
-                <Image
-                    style={{width: 30, height: 30, margin: 8}}
-                    source={imgSrc}/>
-                <Text style={styles.headerText}>{team.city}</Text>
-                <Text style={[styles.headerText, {paddingLeft: 5}]}>{team.mascot}</Text>
-                <Icon name={icon}
-                      size={25}
-                      color={favoriteColor}
-                      onPress={() => {this.props.onFavorite()}}
-                      style={{paddingLeft: 10}}/>
-            </View>
-            <View style={styles.headerTitle}>
-                <Text style={{color: '#FFFFFF'}}>Home</Text>
-                <Text style={{color: '#FFFFFF'}}>Away</Text>
-            </View>
-        </View>
-    }
-}
-
-const styles = StyleSheet.create({
-    headerTeam: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        backgroundColor: '#FFFFFF',
-        alignItems: 'center'
-    },
-    headerTitle: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-around',
-        backgroundColor: '#147979'
-    },
-    headerText: {
-        color: '#0D4D4D',
-        paddingLeft: 10
-    }
-});

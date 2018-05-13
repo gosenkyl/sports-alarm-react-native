@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import PopupDialog, {DialogTitle} from 'react-native-popup-dialog';
 
 import NotificationService from 'sports-alarm-react-native/app/services/NotificationService';
@@ -11,35 +11,23 @@ export default class Alarm extends Component {
     constructor(props){
         super(props);
 
-        this.state = {
-          isModalVisible: false
-        };
-
         this._onAlarm = this._onAlarm.bind(this);
-        this._onCloseModal = this._onCloseModal.bind(this);
     }
 
-    _onAlarm = (game) => {
-
-        this.setState({isModalVisible: true});
+    _onAlarm = (game, onShowAlarmDialog) => {
+        onShowAlarmDialog(game);
 
         //new NotificationService().createNotification(game);
     };
 
-    _onCloseModal = () => {
-        this.setState({isModalVisible: false});
-    };
-
     render() {
+        let game = this.props.game;
+        let onShowAlarmDialog = this.props.onShowAlarmDialog;
+
         return <View>
-            <TouchableOpacity onPress={() => this._onAlarm(this.props.game)}>
+            <TouchableOpacity onPress={() => this._onAlarm(game, onShowAlarmDialog)}>
                 <Image style={{width: 30, height: 30, margin: 8}} source={alarmImgSrc}/>
             </TouchableOpacity>
-            <Modal visible={this.state.isModalVisible} animationType={'slide'} onRequestClose={() => this._onCloseModal()}>
-                <View>
-                    <Text>Hello</Text>
-                </View>
-            </Modal>
         </View>
     }
 
